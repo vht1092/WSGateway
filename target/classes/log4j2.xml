@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+    	<Property name="PID">????</Property>
+        <Property name="LOG_PATTERN">%clr{%d{yyyy-MM-dd
+			HH:mm:ss.SSS}}{faint}%clr{%5p}%clr{${sys:PID}}{magenta}%clr{---}{faint}%clr{[%15.15t]}{faint}%clr{%-40.40c{1.}}{cyan}
+			%clr{:}{faint}%m%n%xwEx</Property>
+        <Property name="APP_LOG_ROOT">${bundle:application:logging.path}</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+        </Console>
+ 
+ 		<RollingFile name="SpringBoot-Appender" fileName="${APP_LOG_ROOT}/springboot_log.log" filePattern="${APP_LOG_ROOT}/springboot_log-%d{-dd-MM-yyyy}.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+			</Policies>
+		</RollingFile>
+		
+        <RollingFile name="appLog"
+            fileName="${APP_LOG_ROOT}/app_log.log"
+            filePattern="${APP_LOG_ROOT}/app_log-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="19500KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="1" />
+        </RollingFile>
+ 
+    </Appenders>
+    <Loggers>
+ 
+        <Logger name="scb.com.vn.WSGateway" level="INFO" additivity="false">
+            <AppenderRef ref="appLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Logger name="org.hibernate" level="error" additivity="false">
+			<AppenderRef ref="appLog" />
+		</Logger>
+		<Root level="debug">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="SpringBoot-Appender" />
+		</Root>
+ 
+    </Loggers>
+</Configuration>
